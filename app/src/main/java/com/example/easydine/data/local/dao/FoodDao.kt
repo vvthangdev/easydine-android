@@ -18,6 +18,10 @@ interface FoodDao {
     @Query("SELECT COUNT(*) FROM foods WHERE inCart = 1")
     fun getCartItemCount(): LiveData<Int>
 
+    @Query("SELECT * FROM foods WHERE inCart = 1")
+    fun getCartItems(): LiveData<List<Food>>
+
     @Query("UPDATE foods SET inCart = :inCart WHERE id = :foodId")
     suspend fun updateCartStatus(foodId: Int, inCart: Boolean)
+
 }

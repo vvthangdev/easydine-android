@@ -1,10 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.cart.CartActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#111111">
+
+    <!-- Nút quay lại -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:contentDescription="back"
+        android:background="@null"
+        android:src="@drawable/ic_backv2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:id="@+id/tv_cart_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cart"
+        android:layout_marginStart="20dp"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_back"
+        app:layout_constraintStart_toEndOf="@+id/btn_back"
+        app:layout_constraintTop_toTopOf="@+id/btn_back" />
+
+    <!-- RecyclerView danh sách món ăn trong giỏ hàng -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_cart_items"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/cl_summary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_back"
+        tools:listitem="@layout/item_cart" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Tổng tiền -->
+        <TextView
+            android:id="@+id/tv_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total: 100.000 VND"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Nút thanh toán -->
+        <Button
+            android:id="@+id/btn_place_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#FF5722"
+            android:text="Place Order"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_total_price" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

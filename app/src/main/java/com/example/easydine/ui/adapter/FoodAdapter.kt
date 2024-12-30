@@ -29,11 +29,11 @@ class FoodAdapter(
 
         Glide.with(holder.itemView.context)
             .load(food.image)
-            .placeholder(R.drawable.ic_launcher_background)
+            .placeholder(R.drawable.launch_foods)
             .into(holder.foodImage)
 
         holder.foodName.text = food.name
-        holder.foodPrice.text = "${food.price} VND"
+        holder.foodPrice.text = "${food.price.toInt()} VND"
 
         holder.addToCartButton.setOnClickListener {
             onAddToCartClick(food.id)

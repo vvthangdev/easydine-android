@@ -1,5 +1,6 @@
 package com.example.easydine.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.easydine.databinding.ActivityHomeBinding
 import com.example.easydine.ui.adapter.FoodAdapter
 import com.example.easydine.ui.adapter.ImageBannerAdapter
+import com.example.easydine.ui.cart.CartActivity
 import com.example.easydine.ui.viewmodel.FoodViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,6 +51,12 @@ class HomeActivity : AppCompatActivity() {
         }
 
         observeViewModel()
+
+        binding.ivCartIcon.setOnClickListener {
+            // Mở CartActivity
+            val intent = Intent(this, CartActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupAdapters() {

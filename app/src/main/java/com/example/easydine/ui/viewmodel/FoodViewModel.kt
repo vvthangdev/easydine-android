@@ -16,6 +16,9 @@ class FoodViewModel @Inject constructor(private val repository: FoodRepository) 
     // LiveData cho danh sách món ăn
     val foods: LiveData<List<Food>> = repository.allFoods
 
+    // LiveData cho danh sách món ăn trong giỏ hàng
+    val cartItems: LiveData<List<Food>> = repository.getCartItems()
+
     // LiveData cho số lượng món trong giỏ hàng
     val cartItemCount: LiveData<Int> = repository.cartItemCount
 
@@ -45,4 +48,17 @@ class FoodViewModel @Inject constructor(private val repository: FoodRepository) 
             repository.removeFromCart(foodId)
         }
     }
+
+    fun increaseQuantity(foodId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateQuantity(foodId, 1) // Tăng số lượng lên 1
+        }
+    }
+
+    fun decreaseQuantity(foodId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateQuantity(foodId, -1) // Giảm số lượng xuống 1
+        }
+    }
+
 }

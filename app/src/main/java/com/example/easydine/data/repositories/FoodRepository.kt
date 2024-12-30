@@ -16,6 +16,11 @@ class FoodRepository @Inject constructor(
 ) {
     val allFoods: LiveData<List<Food>> = foodDao.getAllFoods()
     val cartItemCount: LiveData<Int> = foodDao.getCartItemCount()
+
+    // Lấy danh sách các món ăn trong giỏ hàng
+    fun getCartItems(): LiveData<List<Food>> {
+        return foodDao.getCartItems()
+    }
     /**
      * Fetch data from the API and save to the database.
      */

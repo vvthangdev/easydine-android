@@ -1,60 +1,61 @@
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp">
 
-<LinearLayout
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-android:padding="16dp">
-
-<!-- Hiển thị hình ảnh món ăn -->
-<ImageView
-    android:id="@+id/foodImage"
-    android:layout_width="match_parent"
-    android:layout_height="150dp"
-    android:src="@drawable/ic_launcher_background"
-    android:scaleType="centerCrop" />
-
-<!-- Tên món ăn -->
-<TextView
-    android:id="@+id/foodName"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:text="Food Name"
-    android:textSize="16sp"
-    android:textStyle="bold" />
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="right">
-
-    <TextView
-        android:id="@+id/foodPrice"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="$00"
-        android:textColor="#32343E"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical"
+        android:padding="10dp">
 
-    <ImageButton
-        android:id="@+id/addToCartButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@null"
-        android:contentDescription="add to cart"
-        app:srcCompat="@drawable/ic_add_cart" />
-</androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
-    </androidx.cardview.widget.CardView>
+        <!-- Hiển thị hình ảnh món ăn -->
+        <ImageView
+            android:id="@+id/foodImage"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/launch_foods" />
+
+        <!-- Tên món ăn -->
+        <TextView
+            android:id="@+id/foodName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Food Name"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right">
+
+            <TextView
+                android:id="@+id/foodPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00 VND"
+                android:textColor="#181C2E"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/addToCartButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:contentDescription="add to cart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_add_cart" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

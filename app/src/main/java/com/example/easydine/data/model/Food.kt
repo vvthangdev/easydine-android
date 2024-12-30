@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 data class Food(
     @PrimaryKey val id: Int,
     val name: String,
-//    val restaurant: String, // Trường bổ sung (có thể thêm thủ công)
     val price: Double,
     val image: String,
-    var inCart: Boolean = false // Trạng thái món ăn trong giỏ hàng
+    var inCart: Boolean = false, // Trạng thái món ăn trong giỏ hàng
+    var quantity: Int = 1 // Số lượng món ăn trong giỏ hàng, mặc định là 1
 )

@@ -29,6 +29,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDatabase(app: Application): AppDatabase {
+        // Xóa toàn bộ cơ sở dữ liệu cũ
+//        app.deleteDatabase("food_database") // Tên cơ sở dữ liệu là "food_database"
+
         return Room.databaseBuilder(
             app,
             AppDatabase::class.java,
