@@ -9,6 +9,6 @@ data class Food(
     val name: String,
     val price: Double,
     val image: String,
-    var inCart: Boolean = false, // Trạng thái món ăn trong giỏ hàng
-    var quantity: Int = 1 // Số lượng món ăn trong giỏ hàng, mặc định là 1
+//    var inCart: Boolean = false, // Trạng thái món ăn trong giỏ hàng
+    var quantity: Int = 0 // Số lượng mặc định là 0 (không có trong giỏ hàng)
 )

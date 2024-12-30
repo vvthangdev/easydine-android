@@ -1,6 +1,7 @@
 package com.example.easydine.ui.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easydine.data.model.Food
@@ -22,6 +23,15 @@ class FoodViewModel @Inject constructor(private val repository: FoodRepository) 
     // LiveData cho số lượng món trong giỏ hàng
     val cartItemCount: LiveData<Int> = repository.cartItemCount
 
+    private val _totalPrice = MutableLiveData<Double>()
+    val totalPrice: LiveData<Double> get() = _totalPrice
+
+    // Hàm tính tổng tiền
+    fun calculateTotalPrice(cartItems: List<Food>) {
+        val total = cartItems.sumOf { it.price * it.quantity }
+        _totalPrice.postValue(total)
+    }
+
     /**
      * Gọi API để lấy danh sách món ăn và lưu vào Room database.
      */
@@ -34,9 +44,9 @@ class FoodViewModel @Inject constructor(private val repository: FoodRepository) 
     /**
      * Thêm món ăn vào giỏ hàng.
      */
-    fun addToCart(foodId: Int) {
+    fun addToCart(foodId: Int, quantity: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addToCart(foodId)
+            repository.addToCart(foodId, quantity)
         }
     }
 
@@ -51,13 +61,19 @@ class FoodViewModel @Inject constructor(private val repository: FoodRepository) 
 
     fun increaseQuantity(foodId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateQuantity(foodId, 1) // Tăng số lượng lên 1
+            val currentFood = repository.getFoodById(foodId)
+            if (currentFood != null) {
+                repository.updateQuantity(foodId, currentFood.quantity + 1)
+            }
         }
     }
 
     fun decreaseQuantity(foodId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateQuantity(foodId, -1) // Giảm số lượng xuống 1
+            val currentFood = repository.getFoodById(foodId)
+            if (currentFood != null && currentFood.quantity > 0) {
+                repository.updateQuantity(foodId, currentFood.quantity - 1)
+            }
         }
     }
 

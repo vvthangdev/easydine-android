@@ -52,6 +52,7 @@ class HomeActivity : AppCompatActivity() {
 
         observeViewModel()
 
+
         binding.ivCartIcon.setOnClickListener {
             // Mở CartActivity
             val intent = Intent(this, CartActivity::class.java)
@@ -59,15 +60,25 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    /*
+    Banner
+    */
+
     private fun setupAdapters() {
         // Khởi tạo adapter cho banners
         imageBannerAdapter = ImageBannerAdapter(emptyList())
         binding.vpImageBanner.adapter = imageBannerAdapter
 
         // Khởi tạo adapter cho danh sách món ăn
-        foodAdapter = FoodAdapter { foodId ->
-            foodViewModel.addToCart(foodId)
-        }
+//        foodAdapter = FoodAdapter { foodId ->
+//            foodViewModel.addToCart(foodId, 1)
+//        }
+
+        foodAdapter = FoodAdapter(
+            onAddToCartClick = {foodId ->
+                foodViewModel.increaseQuantity(foodId)
+            }
+        )
         binding.rvFoodList.apply {
             layoutManager = GridLayoutManager(this@HomeActivity, 2)
             adapter = foodAdapter

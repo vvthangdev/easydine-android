@@ -22,6 +22,28 @@ class FoodRepository @Inject constructor(
         return foodDao.getCartItems()
     }
     /**
+     * Add item to cart.
+     */
+    suspend fun addToCart(foodId: Int, quantity: Int) {
+        foodDao.updateQuantity(foodId, quantity)
+    }
+
+    /**
+     * Remove item from cart.
+     */
+    suspend fun removeFromCart(foodId: Int) {
+        foodDao.updateQuantity(foodId, 0)
+    }
+
+    suspend fun updateQuantity(foodId: Int, quantity: Int) {
+        foodDao.updateQuantity(foodId, quantity)
+    }
+
+    suspend fun getFoodById(foodId: Int): Food? {
+        return foodDao.getFoodById(foodId)
+    }
+
+    /**
      * Fetch data from the API and save to the database.
      */
     suspend fun fetchAndSaveFoods() {
@@ -48,17 +70,4 @@ class FoodRepository @Inject constructor(
         }
     }
 
-    /**
-     * Add item to cart.
-     */
-    suspend fun addToCart(foodId: Int) {
-        foodDao.updateCartStatus(foodId, true)
-    }
-
-    /**
-     * Remove item from cart.
-     */
-    suspend fun removeFromCart(foodId: Int) {
-        foodDao.updateCartStatus(foodId, false)
-    }
 }

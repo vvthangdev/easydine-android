@@ -1,17 +1,21 @@
 package com.example.easydine.ui.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.easydine.R
 import com.example.easydine.data.model.Food
+import com.example.easydine.utils.ToastManager
 
 class FoodAdapter(
+//    context: Context,
     private val onAddToCartClick: (Int) -> Unit
 ) : RecyclerView.Adapter<FoodAdapter.FoodViewHolder>() {
 
@@ -36,6 +40,7 @@ class FoodAdapter(
         holder.foodPrice.text = "${food.price.toInt()} VND"
 
         holder.addToCartButton.setOnClickListener {
+            ToastManager.showToast(holder.itemView.context, "Thêm vào giỏ hàng thành công")
             onAddToCartClick(food.id)
         }
     }
