@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     kotlin("kapt")
     id("com.google.devtools.ksp")
+    id ("com.google.dagger.hilt.android")
 }
 
 android {
@@ -49,25 +50,26 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    val retrofitVersion = "2.11.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation ("androidx.room:room-runtime:2.6.0")
 //    kapt ("androidx.room:room-compiler:$room_version")
 //    ksp("libs.androidx.room.compiler")
-    ksp("androidx.room:room-compiler:2.6.0")
-    implementation ("androidx.room:room-ktx:2.6.0")
+    ksp("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
     testImplementation ("androidx.room:room-testing:2.6.0")
-    implementation ("com.squareup.retrofit2:converter-moshi:2.6.0")
+    implementation ("com.squareup.retrofit2:converter-moshi:2.11.0")
     // Moshi for JSON parsing
-    implementation ("com.squareup.moshi:moshi:1.15.0")
-    implementation ("com.squareup.moshi:moshi-kotlin:1.15.0")
+    implementation ("com.squareup.moshi:moshi:1.15.1")
+    implementation (libs.moshi.kotlin)
 
-    implementation ("androidx.viewpager2:viewpager2:1.0.0")
+    implementation ("com.google.dagger:hilt-android:2.51.1")
+    kapt ("com.google.dagger:hilt-compiler:2.51.1")
+
+    implementation ("androidx.viewpager2:viewpager2:1.1.0")
     // OkHttp for logging interceptor
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 

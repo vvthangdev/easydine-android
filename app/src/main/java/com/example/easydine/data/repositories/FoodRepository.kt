@@ -3,35 +3,57 @@ package com.example.easydine.data.repositories
 import androidx.lifecycle.LiveData
 import com.example.easydine.data.local.dao.FoodDao
 import com.example.easydine.data.model.Food
+import com.example.easydine.data.network.response.FoodResponse
+import com.example.easydine.data.network.response.toFood
 import com.example.easydine.data.network.service.FoodApiService
+import retrofit2.HttpException
+import java.io.IOException
+import javax.inject.Inject
 
-class FoodRepository(
+class FoodRepository @Inject constructor(
     private val foodDao: FoodDao,
     private val foodApiService: FoodApiService
 ) {
-
     val allFoods: LiveData<List<Food>> = foodDao.getAllFoods()
-
-    suspend fun refreshFoods() {
-        val response = foodApiService.getFoods()
-
-        if (response.isSuccessful) {
-            val foodResponses = response.body() ?: emptyList()
-
-            // Ánh xạ từ FoodResponse sang Food
-            val foodsToInsert = foodResponses.map { foodResponse ->
-                Food(
-                    id = foodResponse.id,
-                    name = foodResponse.name,
-                    image = foodResponse.image,
-                    price = foodResponse.price ?: 0.0 // Giá trị mặc định nếu null
-                )
+    val cartItemCount: LiveData<Int> = foodDao.getCartItemCount()
+    /**
+     * Fetch data from the API and save to the database.
+     */
+    suspend fun fetchAndSaveFoods() {
+        try {
+            // Gọi API và xử lý phản hồi
+            val response = foodApiService.getFoods()
+            if (response.isSuccessful) {
+                response.body()?.let { foodResponses ->
+                    // Ánh xạ từ FoodResponse sang Food
+                    val foods = foodResponses.map { it.toFood() }
+                    // Lưu danh sách món ăn vào Room database
+                    foodDao.insertFoods(foods)
+                }
+            } else {
+                // Xử lý lỗi từ server (4xx hoặc 5xx)
+                throw HttpException(response)
             }
-
-            // Chèn danh sách Food vào Room Database
-            foodDao.insertFoods(foodsToInsert)
-        } else {
-            throw Exception("Failed to refresh foods: ${response.message()}")
+        } catch (e: IOException) {
+            // Xử lý lỗi khi không thể kết nối đến server (mất mạng, DNS, etc.)
+            e.printStackTrace()
+        } catch (e: HttpException) {
+            // Xử lý lỗi từ server
+            e.printStackTrace()
         }
+    }
+
+    /**
+     * Add item to cart.
+     */
+    suspend fun addToCart(foodId: Int) {
+        foodDao.updateCartStatus(foodId, true)
+    }
+
+    /**
+     * Remove item from cart.
+     */
+    suspend fun removeFromCart(foodId: Int) {
+        foodDao.updateCartStatus(foodId, false)
     }
 }

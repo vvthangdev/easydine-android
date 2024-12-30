@@ -38,9 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:textSize="15sp"
         android:text="Please sign in to your existing account"
         android:textColor="@color/white"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLoginTitle" />
@@ -148,10 +148,10 @@
 
         <!-- Nút đăng nhập -->
         <androidx.appcompat.widget.AppCompatButton
-            android:layout_marginTop="10dp"
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="@drawable/btn_login_bg"
             android:gravity="center"
             android:text="LOG IN"
@@ -198,12 +198,12 @@
 
         <!-- Các icon social media -->
         <LinearLayout
-            android:layout_marginTop="10dp"
-            android:paddingStart="50dp"
-            android:paddingEnd="50dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:paddingStart="50dp"
+            android:paddingEnd="50dp">
 
             <ImageView
                 android:id="@+id/ivFbIcon"

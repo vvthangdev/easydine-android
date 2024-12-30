@@ -25,22 +25,3 @@ interface FoodApiService {
     @DELETE("item/{id}")
     suspend fun deleteFood(@Path("id") id: Long): Response<Unit>
 }
-
-
-//interface FoodApiService {
-//    @GET("item")
-//    suspend fun getFoods(): Response<List<FoodResponse>>
-//
-//    @GET("item/{id}")
-//    suspend fun getFoodById(@Path("id") id: Long): Response<FoodResponse>
-//
-//    @POST("item")
-//    suspend fun createFood(@Body food: FoodResponse): Response<FoodResponse>
-//
-//    @PUT("item/{id}")
-//    suspend fun updateFood(@Path("id") id: Long,
-//                           @Body food: FoodResponse): Response<FoodResponse>
-//
-//    @DELETE("item/{id}")
-//    suspend fun deleteFood(@Path("id") id: Long): Response<Unit>
-//}

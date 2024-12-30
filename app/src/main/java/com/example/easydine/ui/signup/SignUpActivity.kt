@@ -29,6 +29,7 @@ class SignUpActivity : AppCompatActivity() {
         signUpViewModel.signUpResult.observe(this, Observer { result ->
             when(result){
                 is SignUpResult.Success -> {
+                    Toast.makeText(this, "Đăng ký tài khoản thành công!", Toast.LENGTH_SHORT).show()
                     finish()
                 }
                 is SignUpResult.Failure -> {

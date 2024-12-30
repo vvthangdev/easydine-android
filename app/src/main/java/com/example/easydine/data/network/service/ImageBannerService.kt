@@ -13,13 +13,4 @@ interface ImageBannerService {
         suspend fun getAllItemBanners(
             @Header("Authorization") authorization: String
         ): Response<List<ImageBannerResponse>>
-
-//    @GET("item/item-banner")
-//    suspend fun getAllItemBanners(
-//        @Header("Authorization") authorization: String
-//    ): Response<List<ImageBannerResponse>>
-//    @POST("/api/auth/refresh-token")
-//    suspend fun refreshAccessToken(
-//        @Header("Authorization") authorization: String
-//    ): Response<RefreshTokenResponse>
 }

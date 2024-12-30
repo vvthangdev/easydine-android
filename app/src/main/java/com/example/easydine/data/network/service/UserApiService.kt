@@ -4,20 +4,12 @@ import com.example.easydine.data.network.response.LoginResponse
 import com.example.easydine.data.network.response.RefreshTokenResponse
 import com.example.easydine.data.network.response.SignUpResponse
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface UserApiService {
-
-    //    @FormUrlEncoded
-//    @POST("api/auth/login")
-//    suspend fun loginUser(
-//        @Field("email") email: String,
-//        @Field("password") password: String
-//    ): LoginResponse
     @FormUrlEncoded
     @POST("/api/auth/login")
     suspend fun loginUser(

@@ -1,26 +1,56 @@
 package com.example.easydine.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.easydine.R
 import com.example.easydine.data.model.Food
-import com.example.easydine.databinding.ItemFoodBinding
-import com.example.easydine.ui.viewholder.FoodViewHolder
 
-class FoodAdapter : ListAdapter<Food, FoodViewHolder>(FoodDiffCallback()) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodViewHolder {
-        val binding = ItemFoodBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return FoodViewHolder(binding)
+class FoodAdapter(
+    private val onAddToCartClick: (Int) -> Unit
+) : RecyclerView.Adapter<FoodAdapter.FoodViewHolder>() {
+
+    private var foods = emptyList<Food>()
+
+    inner class FoodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val foodImage: ImageView = itemView.findViewById(R.id.foodImage)
+        val foodName: TextView = itemView.findViewById(R.id.foodName)
+        val foodPrice: TextView = itemView.findViewById(R.id.foodPrice)
+        val addToCartButton: ImageButton = itemView.findViewById(R.id.addToCartButton)
     }
 
     override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
-        val food = getItem(position)
-        holder.bind(food)
-    }
-}
+        val food = foods[position]
 
-class FoodDiffCallback : DiffUtil.ItemCallback<Food>() {
-    override fun areItemsTheSame(oldItem: Food, newItem: Food): Boolean = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: Food, newItem: Food): Boolean = oldItem == newItem
+        Glide.with(holder.itemView.context)
+            .load(food.image)
+            .placeholder(R.drawable.ic_launcher_background)
+            .into(holder.foodImage)
+
+        holder.foodName.text = food.name
+        holder.foodPrice.text = "${food.price} VND"
+
+        holder.addToCartButton.setOnClickListener {
+            onAddToCartClick(food.id)
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_food, parent, false)
+        return FoodViewHolder(view)
+    }
+
+    override fun getItemCount(): Int {
+        return foods.size
+    }
+
+    fun setData(newFoods: List<Food>) {
+        this.foods = newFoods
+        notifyDataSetChanged()
+    }
 }

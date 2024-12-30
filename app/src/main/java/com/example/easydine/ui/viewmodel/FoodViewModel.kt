@@ -1,14 +1,17 @@
-package com.example.easydine.viewmodel
+package com.example.easydine.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easydine.data.model.Food
 import com.example.easydine.data.repositories.FoodRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FoodViewModel(private val repository: FoodRepository) : ViewModel() {
+@HiltViewModel
+class FoodViewModel @Inject constructor(private val repository: FoodRepository) : ViewModel() {
 
     // LiveData cho danh sách món ăn
     val foods: LiveData<List<Food>> = repository.allFoods

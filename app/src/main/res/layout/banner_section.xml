@@ -1,6 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_image_banner"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_marginBottom="16dp"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/tv_restaurant_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:text="Aris Restaurant"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_restaurant_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thăng hoa vị giác với 300+ món nhậu đặc sắc, lẩu nướng, hải sản
+được chuẩn bị từ những đầu bếp chuyên nghiệp hàng đầu."
+        android:textColor="#A0A5BA" />
+</LinearLayout>
