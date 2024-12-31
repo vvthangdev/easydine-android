@@ -29,6 +29,9 @@ class CartActivity : AppCompatActivity() {
             },
             onDecreaseQuantity = { foodId ->
                 foodViewModel.decreaseQuantity(foodId)
+            },
+            onUpDateQuantity = { foodId, quantity ->
+                foodViewModel.updateQuantity(foodId, quantity)
             }
         )
         binding.rvCartItems.layoutManager = LinearLayoutManager(this)

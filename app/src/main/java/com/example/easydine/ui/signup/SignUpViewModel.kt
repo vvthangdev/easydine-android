@@ -1,18 +1,19 @@
 package com.example.easydine.ui.signup
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easydine.data.repositories.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class SignUpViewModel: ViewModel() {
-    private val userRepository = UserRepository()
+@HiltViewModel
+class SignUpViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
 
     private val _signupRes = MutableLiveData<SignUpResult>()
     val signUpResult: LiveData<SignUpResult> get() = _signupRes

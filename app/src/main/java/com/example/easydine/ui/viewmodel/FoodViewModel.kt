@@ -44,20 +44,20 @@ class FoodViewModel @Inject constructor(private val repository: FoodRepository) 
     /**
      * Thêm món ăn vào giỏ hàng.
      */
-    fun addToCart(foodId: Int, quantity: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.addToCart(foodId, quantity)
-        }
-    }
+//    fun addToCart(foodId: Int, quantity: Int) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            repository.addToCart(foodId, quantity)
+//        }
+//    }
 
     /**
      * Xóa món ăn khỏi giỏ hàng.
      */
-    fun removeFromCart(foodId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.removeFromCart(foodId)
-        }
-    }
+//    fun removeFromCart(foodId: Int) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            repository.removeFromCart(foodId)
+//        }
+//    }
 
     fun increaseQuantity(foodId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -77,4 +77,12 @@ class FoodViewModel @Inject constructor(private val repository: FoodRepository) 
         }
     }
 
+    fun updateQuantity(foodId: Int, quantity: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val currentFood = repository.getFoodById(foodId)
+            if (currentFood != null) {
+                repository.updateQuantity(foodId, quantity)
+            }
+        }
+    }
 }

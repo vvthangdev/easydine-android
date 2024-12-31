@@ -8,6 +8,7 @@ import com.example.easydine.data.local.database.AppDatabase
 import com.example.easydine.data.network.service.FoodApiService
 import com.example.easydine.data.network.service.ImageBannerService
 import com.example.easydine.data.network.service.UserApiService
+import com.example.easydine.data.repositories.UserRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -24,13 +25,53 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val BASE_URL = "https://f9c2-2a09-bac1-7a80-50-00-245-e6.ngrok-free.app/"
+    private const val BASE_URL = "https://82ad-2a09-bac5-d45a-263c-00-3cf-38.ngrok-free.app/"
+
+    // Cung cấp UserApiService
+    @Provides
+    @Singleton
+    fun provideUserApiService(retrofit: Retrofit): UserApiService {
+        return retrofit.create(UserApiService::class.java)
+    }
+
+    @Provides
+    fun provideUserRepositoy(apiService: UserApiService): UserRepository{
+        return UserRepository(apiService)
+    }
+
+    // Cung cấp FoodApiService
+    @Provides
+    @Singleton
+    fun provideFoodApiService(retrofit: Retrofit): FoodApiService {
+        return retrofit.create(FoodApiService::class.java)
+    }
+
+    @Provides
+    fun provideFoodDao(database: AppDatabase): FoodDao {
+        return database.foodDao()
+    }
+
+    // 3. Cung cấp ImageBannerDao
+    @Provides
+    fun provideImageBannerDao(database: AppDatabase): ImageBannerDao {
+        return database.imageBannerDao()
+    }
+
+
+    // Cung cấp ImageBannerService
+    @Provides
+    @Singleton
+    fun provideImageBannerService(retrofit: Retrofit): ImageBannerService {
+        return retrofit.create(ImageBannerService::class.java)
+    }
+
+
 
     @Provides
     @Singleton
     fun provideDatabase(app: Application): AppDatabase {
         // Xóa toàn bộ cơ sở dữ liệu cũ
-        app.deleteDatabase("food_database") // Tên cơ sở dữ liệu là "food_database"
+//        app.deleteDatabase("food_database") // Tên cơ sở dữ liệu là "food_database"
 
         return Room.databaseBuilder(
             app,
@@ -79,36 +120,4 @@ object AppModule {
             .build()
     }
 
-    // Cung cấp FoodApiService
-    @Provides
-    @Singleton
-    fun provideFoodApiService(retrofit: Retrofit): FoodApiService {
-        return retrofit.create(FoodApiService::class.java)
-    }
-
-    @Provides
-    fun provideFoodDao(database: AppDatabase): FoodDao {
-        return database.foodDao()
-    }
-
-    // 3. Cung cấp ImageBannerDao
-    @Provides
-    fun provideImageBannerDao(database: AppDatabase): ImageBannerDao {
-        return database.imageBannerDao()
-    }
-
-
-    // Cung cấp ImageBannerService
-    @Provides
-    @Singleton
-    fun provideImageBannerService(retrofit: Retrofit): ImageBannerService {
-        return retrofit.create(ImageBannerService::class.java)
-    }
-
-    // Cung cấp UserApiService
-    @Provides
-    @Singleton
-    fun provideUserApiService(retrofit: Retrofit): UserApiService {
-        return retrofit.create(UserApiService::class.java)
-    }
 }

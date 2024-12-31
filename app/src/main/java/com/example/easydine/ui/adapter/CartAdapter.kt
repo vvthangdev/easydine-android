@@ -1,5 +1,7 @@
 package com.example.easydine.ui.adapter
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,7 +14,8 @@ import com.example.easydine.databinding.ItemCartBinding
 class CartAdapter(
     private var foods: List<Food>,
     private val onIncreaseQuantity: (Int) -> Unit,
-    private val onDecreaseQuantity: (Int) -> Unit
+    private val onDecreaseQuantity: (Int) -> Unit,
+    private val onUpDateQuantity: (Int, Int) -> Unit
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
@@ -42,7 +45,10 @@ class CartAdapter(
 
             // Nút tăng số lượng
             binding.btnIncreaseQuantity.setOnClickListener {
-                Log.d("CartAdapter", "Tăng số lượng món ăn: ${food.name}, ID: ${food.id}, Giá: ${food.price}, Số lượng hiện tại: ${food.quantity}")
+                Log.d(
+                    "CartAdapter",
+                    "Tăng số lượng món ăn: ${food.name}, ID: ${food.id}, Giá: ${food.price}, Số lượng hiện tại: ${food.quantity}"
+                )
                 onIncreaseQuantity(food.id)
             }
 
@@ -50,7 +56,10 @@ class CartAdapter(
 
             // Nút giảm số lượng
             binding.btnDecreaseQuantity.setOnClickListener {
-                Log.d("CartAdapter", "Giảm số lượng món ăn: ${food.name}, ID: ${food.id}, Giá: ${food.price}, Số lượng hiện tại: ${food.quantity}")
+                Log.d(
+                    "CartAdapter",
+                    "Giảm số lượng món ăn: ${food.name}, ID: ${food.id}, Giá: ${food.price}, Số lượng hiện tại: ${food.quantity}"
+                )
                 if (food.quantity == 1) {
                     AlertDialog.Builder(binding.root.context)
                         .setTitle("Xác nhận")
@@ -60,12 +69,35 @@ class CartAdapter(
                         }
                         .setNegativeButton("Hủy", null)
                         .show()
-                }
-                else {
+                } else {
                     onDecreaseQuantity(food.id)
                 }
-
             }
+
+            binding.etQuantity.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) { // Khi EditText mất focus
+                    val enteredQuantity = binding.etQuantity.text.toString().toIntOrNull() ?: 0
+                    if (enteredQuantity != food.quantity) {
+                        onUpDateQuantity(food.id, enteredQuantity)
+                    }
+                }
+            }
+
+
+//            binding.etQuantity.addTextChangedListener(object : TextWatcher {
+//                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//
+//                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                    val enteredQuantity = s.toString().toIntOrNull() ?: return
+//                    if (enteredQuantity != food.quantity) {
+////                        onUpdateQuantity(food.id, enteredQuantity)
+//                        onUpDateQuantity(food.id, enteredQuantity)
+//                    }
+//                }
+//
+//                override fun afterTextChanged(s: Editable?) {}
+//            })
+
 
             // Sử dụng Glide để tải hình ảnh từ URL
             Glide.with(binding.root.context)

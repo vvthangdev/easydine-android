@@ -4,26 +4,14 @@ import androidx.lifecycle.LiveData
 import com.example.easydine.data.local.dao.ImageBannerDao
 import com.example.easydine.data.model.ImageBanner
 import com.example.easydine.data.network.service.ImageBannerService
-import com.example.easydine.data.network.ApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import android.content.Context
-import com.example.easydine.data.local.database.AppDatabase
 import javax.inject.Inject
 
 class ImageBannerRepository @Inject constructor(
     private val imageBannerDao: ImageBannerDao,
     private val imageBannerService: ImageBannerService
 ) {
-
-
-
-//    init {
-//        // Khởi tạo DAO từ database singleton
-//        val database = AppDatabase.getDatabase(context)
-//        imageBannerDao = database.imageBannerDao()
-//        imageBannerService = ApiClient.imageBannerService // Sử dụng ImageBannerService từ ApiClient
-//    }
 
     // Lấy tất cả banner từ database
     fun getAllBanners(): LiveData<List<ImageBanner>> {

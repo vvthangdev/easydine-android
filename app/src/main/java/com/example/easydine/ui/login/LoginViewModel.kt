@@ -7,13 +7,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easydine.data.repositories.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val userRepository: UserRepository): ViewModel() {
 
     // Dùng để giữ thông tin repository
-    private val userRepository = UserRepository()
 
     // LiveData to observe login status and response
     private val _loginResult = MutableLiveData<LoginResult>()

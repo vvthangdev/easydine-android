@@ -25,7 +25,15 @@ class FoodRepository @Inject constructor(
      * Add item to cart.
      */
     suspend fun addToCart(foodId: Int, quantity: Int) {
-        foodDao.updateQuantity(foodId, quantity)
+        val currentFood = foodDao.getFoodById(foodId)
+        if (currentFood != null) {
+            val newQuantity = currentFood.quantity + quantity
+            foodDao.updateQuantity(foodId, newQuantity)
+        } else {
+            // Thêm món ăn mới nếu chưa có trong cơ sở dữ liệu
+            val food = Food(foodId, "Unknown", 0.0, "", quantity)
+            foodDao.insertFoods(listOf(food))
+        }
     }
 
     /**
@@ -36,7 +44,10 @@ class FoodRepository @Inject constructor(
     }
 
     suspend fun updateQuantity(foodId: Int, quantity: Int) {
-        foodDao.updateQuantity(foodId, quantity)
+        val currentFood = foodDao.getFoodById(foodId)
+        if (currentFood != null) {
+            foodDao.updateQuantity(foodId, quantity)
+        }
     }
 
     suspend fun getFoodById(foodId: Int): Food? {
@@ -53,9 +64,25 @@ class FoodRepository @Inject constructor(
             if (response.isSuccessful) {
                 response.body()?.let { foodResponses ->
                     // Ánh xạ từ FoodResponse sang Food
-                    val foods = foodResponses.map { it.toFood() }
-                    // Lưu danh sách món ăn vào Room database
-                    foodDao.insertFoods(foods)
+                    val newFoods = foodResponses.map { it.toFood() }
+
+                    // Lấy danh sách hiện có từ cơ sở dữ liệu
+                    val currentFoods = foodDao.getAllFoods()
+
+                    // Merge dữ liệu mới từ API với dữ liệu hiện có
+                    val mergedFoods = newFoods.map { newFood ->
+                        val existingFood = foodDao.getFoodById(newFood.id)
+                        if (existingFood != null) {
+                            // Giữ lại giá trị quantity từ cơ sở dữ liệu
+                            newFood.copy(quantity = existingFood.quantity)
+                        } else {
+                            // Nếu là món mới, giữ giá trị mặc định
+                            newFood
+                        }
+                    }
+
+                    // Lưu danh sách món ăn đã merge vào Room database
+                    foodDao.insertFoods(mergedFoods)
                 }
             } else {
                 // Xử lý lỗi từ server (4xx hoặc 5xx)
@@ -69,5 +96,6 @@ class FoodRepository @Inject constructor(
             e.printStackTrace()
         }
     }
+
 
 }

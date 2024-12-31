@@ -15,10 +15,7 @@ interface FoodDao {
     @Query("SELECT * FROM foods WHERE id = :foodId LIMIT 1")
     suspend fun getFoodById(foodId: Int): Food?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFoods(foods: List<Food>)
-
-    @Query("SELECT COUNT(*) FROM foods WHERE quantity >= 1")
+    @Query("SELECT COUNT(*) FROM foods WHERE quantity > 0")
     fun getCartItemCount(): LiveData<Int>
 
     @Query("SELECT * FROM foods WHERE quantity >= 1")
@@ -26,4 +23,7 @@ interface FoodDao {
 
     @Query("UPDATE foods SET quantity = :quantity WHERE id = :foodId")
     suspend fun updateQuantity(foodId: Int, quantity: Int)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFoods(foods: List<Food>)
 }

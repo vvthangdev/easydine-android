@@ -8,5 +8,6 @@ fun FoodResponse.toFood(): Food {
         name = this.name,
         price = this.price,
         image = this.image
+
     )
 }

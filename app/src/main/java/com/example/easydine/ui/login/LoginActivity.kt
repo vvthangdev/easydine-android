@@ -10,7 +10,9 @@ import androidx.lifecycle.Observer
 import com.example.easydine.databinding.ActivityLoginBinding
 import com.example.easydine.ui.home.HomeActivity
 import com.example.easydine.ui.signup.SignUpActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding

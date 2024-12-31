@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easydine.data.repositories.UserRepository
 import com.example.easydine.utils.UserManager
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SplashViewModel : ViewModel() {
-    private val userRepository = UserRepository()
+@HiltViewModel
+class SplashViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
 
     // Function to check user status and refresh token if necessary
     fun checkUserStatus(sharedPreferences: SharedPreferences, onNavigateToLogin: () -> Unit, onNavigateToHome: () -> Unit) {

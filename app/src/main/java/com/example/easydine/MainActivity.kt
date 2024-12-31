@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.easydine.data.model.Food
-import com.example.easydine.data.network.ApiClient
 import com.example.easydine.data.network.service.FoodApiService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

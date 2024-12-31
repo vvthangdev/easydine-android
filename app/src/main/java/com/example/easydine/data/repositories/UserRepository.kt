@@ -1,16 +1,15 @@
 package com.example.easydine.data.repositories
 
 import android.util.Log
-import com.example.easydine.data.network.ApiClient
 import com.example.easydine.data.network.response.LoginResponse
 import com.example.easydine.data.network.response.RefreshTokenResponse
 import com.example.easydine.data.network.response.SignUpResponse
+import com.example.easydine.data.network.service.UserApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class UserRepository {
-
-    private val apiService = ApiClient.userApiService
+class UserRepository @Inject constructor(private val apiService: UserApiService) {
 
     // Login user using coroutine
     suspend fun loginUser(email: String, password: String): LoginResponse? {
