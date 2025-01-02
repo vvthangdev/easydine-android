@@ -3,7 +3,6 @@ package com.example.easydine.data.repositories
 import androidx.lifecycle.LiveData
 import com.example.easydine.data.local.dao.FoodDao
 import com.example.easydine.data.model.Food
-import com.example.easydine.data.network.response.FoodResponse
 import com.example.easydine.data.network.response.toFood
 import com.example.easydine.data.network.service.FoodApiService
 import retrofit2.HttpException
@@ -64,7 +63,6 @@ class FoodRepository @Inject constructor(
      */
     suspend fun fetchAndSaveFoods() {
         try {
-            // Gọi API và xử lý phản hồi
             val response = foodApiService.getFoods()
             if (response.isSuccessful) {
                 response.body()?.let { foodResponses ->
@@ -72,35 +70,53 @@ class FoodRepository @Inject constructor(
                     val newFoods = foodResponses.map { it.toFood() }
 
                     // Lấy danh sách hiện có từ cơ sở dữ liệu
-                    val currentFoods = foodDao.getAllFoods()
+                    val currentFoods = foodDao.getAllFoodsSync() // Thêm phương thức này vào DAO
 
-                    // Merge dữ liệu mới từ API với dữ liệu hiện có
-                    val mergedFoods = newFoods.map { newFood ->
-                        val existingFood = foodDao.getFoodById(newFood.id)
-                        if (existingFood != null) {
-                            // Giữ lại giá trị quantity từ cơ sở dữ liệu
-                            newFood.copy(quantity = existingFood.quantity)
-                        } else {
-                            // Nếu là món mới, giữ giá trị mặc định
-                            newFood
+                    // Tạo một Set các ID từ API để kiểm tra món ăn đã bị xóa
+                    val newFoodIds = newFoods.map { it.id }.toSet()
+
+                    // Tìm các món ăn đã bị xóa
+                    val deletedFoodIds = currentFoods
+                        .filter { currentFood -> !newFoodIds.contains(currentFood.id) }
+                        .map { it.id }
+
+                    // Kiểm tra xem có thay đổi nào không
+                    val hasChanges = deletedFoodIds.isNotEmpty() ||
+                            newFoods.any { newFood ->
+                                val existingFood = currentFoods.find { it.id == newFood.id }
+                                existingFood == null ||
+                                        existingFood.name != newFood.name ||
+                                        existingFood.price != newFood.price ||
+                                        existingFood.image != newFood.image
+                            }
+
+                    if (hasChanges) {
+                        // Xóa các món ăn không còn tồn tại
+                        if (deletedFoodIds.isNotEmpty()) {
+                            foodDao.deleteFoodsByIds(deletedFoodIds)
                         }
-                    }
 
-                    // Lưu danh sách món ăn đã merge vào Room database
-                    foodDao.insertFoods(mergedFoods)
+                        // Merge dữ liệu mới với dữ liệu hiện có
+                        val mergedFoods = newFoods.map { newFood ->
+                            val existingFood = currentFoods.find { it.id == newFood.id }
+                            if (existingFood != null) {
+                                newFood.copy(quantity = existingFood.quantity)
+                            } else {
+                                newFood
+                            }
+                        }
+
+                        // Chỉ cập nhật database khi có thay đổi
+                        foodDao.insertFoods(mergedFoods)
+                    }
                 }
             } else {
-                // Xử lý lỗi từ server (4xx hoặc 5xx)
                 throw HttpException(response)
             }
         } catch (e: IOException) {
-            // Xử lý lỗi khi không thể kết nối đến server (mất mạng, DNS, etc.)
             e.printStackTrace()
         } catch (e: HttpException) {
-            // Xử lý lỗi từ server
             e.printStackTrace()
         }
     }
-
-
 }

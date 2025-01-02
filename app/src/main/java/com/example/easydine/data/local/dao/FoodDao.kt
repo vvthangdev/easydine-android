@@ -2,6 +2,7 @@ package com.example.easydine.data.local.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -29,4 +30,10 @@ interface FoodDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFoods(foods: List<Food>)
+
+    @Query("DELETE FROM foods WHERE id IN (:foodIds)")
+    suspend fun deleteFoodsByIds(foodIds: List<Int>)
+
+    @Query("SELECT * FROM foods")
+    suspend fun getAllFoodsSync(): List<Food>
 }
