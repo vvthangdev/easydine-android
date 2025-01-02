@@ -7,7 +7,7 @@
     android:padding="15dp"
     tools:context=".ui.home.HomeActivity">
 
-    <!-- Top Section (Fixed Position) -->
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_top_section"
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
 
         <EditText
             android:id="@+id/et_search"
-            android:layout_width="250dp"
+            android:layout_width="220dp"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
             android:background="@drawable/search_bg"
@@ -88,8 +88,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_main_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <!-- Banner Section -->
             <LinearLayout
@@ -149,54 +148,55 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
-            android:id="@+id/imageButton5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/btn_home"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="home"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_reservation"
+            app:layout_constraintEnd_toStartOf="@+id/btn_add_reservation"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_home" />
 
         <ImageButton
-            android:id="@+id/btn_reservation"
+            android:id="@+id/btn_add_reservation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
             android:contentDescription="add reservation"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton7"
+            app:layout_constraintEnd_toStartOf="@+id/btn_profile"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageButton5"
+            app:layout_constraintStart_toEndOf="@+id/btn_home"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/ic_add_reservation" />
 
         <ImageButton
-            android:id="@+id/imageButton7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/btn_profile"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="profile"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btn_reservation"
+            app:layout_constraintStart_toEndOf="@+id/btn_add_reservation"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_profile" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Top Section (Fixed Position) -->
     <FrameLayout
-        android:id="@+id/fl_fragment_container"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cl_top_section">
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

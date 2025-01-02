@@ -1,7 +1,7 @@
 package com.example.easydine.data.model
 
 data class User(
-    val id: Int?,
+    val id: Int ?= -1,
     var role: String?,
     var name: String?,
     var status: String?,

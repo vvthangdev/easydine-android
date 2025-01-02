@@ -11,15 +11,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(private val userRepository: UserRepository) :
-    ViewModel() {
+class SplashViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
 
     // Function to check user status and refresh token if necessary
-    fun checkUserStatus(
-        sharedPreferences: SharedPreferences,
-        onNavigateToLogin: () -> Unit,
-        onNavigateToHome: () -> Unit
-    ) {
+    fun checkUserStatus(sharedPreferences: SharedPreferences, onNavigateToLogin: () -> Unit, onNavigateToHome: () -> Unit) {
         val refreshToken = sharedPreferences.getString("refreshToken", null)
         Log.d("SplashViewModel", "Refresh Token: $refreshToken")  // Log refreshToken
 
@@ -46,26 +41,19 @@ class SplashViewModel @Inject constructor(private val userRepository: UserReposi
         }
     }
 
-    private fun refreshAccessToken(
-        refreshToken: String,
-        onNavigateToHome: () -> Unit,
-        onNavigateToLogin: () -> Unit
-    ) {
+    private fun refreshAccessToken(refreshToken: String, onNavigateToHome: () -> Unit, onNavigateToLogin: () -> Unit) {
         viewModelScope.launch {
             try {
                 Log.d("SplashViewModel", "Refreshing access token with refreshToken: $refreshToken")
                 val response = userRepository.refreshAccessToken(refreshToken)
 
                 if (response?.accessToken != null) {
-                    Log.d(
-                        "SplashViewModel",
-                        "Access token refreshed successfully, navigating to home."
-                    )
+                    Log.d("SplashViewModel", "Access token refreshed successfully, navigating to home.")
                     Log.d("SplashViewModel", "Access token: ${response.accessToken}")
                     // Save the new accessToken into SharedPreferences
                     onNavigateToHome()
                 } else {
-                    Log.d("SplashViewModel", "Failed to refresh access token, navigating to home.")
+                    Log.d("SplashViewModel", "Failed to refresh access token, navigating to login.")
 //                    onNavigateToLogin()
                     onNavigateToHome()
                 }

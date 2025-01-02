@@ -54,7 +54,7 @@ class CartActivity : AppCompatActivity() {
 
         // Quan sát tổng tiền
         foodViewModel.totalPrice.observe(this, Observer { total ->
-            binding.tvTotalPrice.text = "Total: ${String.format("%.0f", total)} VND"
+            binding.tvTotalPrice.text = "Total ${String.format("%,.0f", total)} Đ"
         })
 
         binding.btnPlaceOrder.setOnClickListener {

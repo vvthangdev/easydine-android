@@ -1,11 +1,13 @@
 package com.example.easydine.data.network.service
 
+import com.example.easydine.data.model.User
 import com.example.easydine.data.network.response.LoginResponse
 import com.example.easydine.data.network.response.RefreshTokenResponse
 import com.example.easydine.data.network.response.SignUpResponse
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
@@ -31,4 +33,8 @@ interface UserApiService {
         @Field("phone") phone: String,
         @Field("password") password: String,
     ): Response<SignUpResponse>
+
+    @GET("/api/auth/user-info")
+    suspend fun getUserDataApi(
+    ): Response<User>
 }

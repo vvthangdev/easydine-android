@@ -1,8 +1,9 @@
 package com.example.easydine.ui.reservation
 
-import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.example.easydine.data.network.request.OrderRequest
 import com.example.easydine.databinding.FragmentReservationBinding
 import com.example.easydine.ui.viewmodel.FoodViewModel
 import com.example.easydine.ui.viewmodel.OrderViewModel
+import com.example.easydine.utils.PreferenceManager
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -25,6 +27,10 @@ class ReservationDialog : DialogFragment() {
 
     private val reservationData = mutableMapOf<String, String>()
     private val calendar = Calendar.getInstance()
+    private var countDownTimer: CountDownTimer? = null
+    private lateinit var preferenceManager: PreferenceManager
+    private var lastSubmitTime: Long = 0
+
 
     private val foodViewModel: FoodViewModel by activityViewModels()
     private val orderViewModel: OrderViewModel by activityViewModels()
@@ -39,36 +45,48 @@ class ReservationDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupDatePicker()
+
+        // Khởi tạo PreferenceManager
+        preferenceManager = PreferenceManager(requireContext())
+        // Lấy giá trị lastSubmitTime từ SharedPreferences
+        lastSubmitTime = preferenceManager.getLastSubmitTime()
+
+        setupDefaultValues()
+        setupCalendarView()
         setupTimePicker()
         setupSubmitButton()
         observeOrderResult()
     }
 
-    private fun setupDatePicker() {
-        binding.btnPickDate.setOnClickListener {
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
+    private fun setupDefaultValues() {
+        // Đặt ngày mặc định là hôm nay
+        val currentDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(calendar.time)
+        reservationData["start_date"] = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time) // Lưu định dạng ISO
+//        binding.tvSelectedDate.text = "Selected Date: $currentDate"
 
-            val datePickerDialog = DatePickerDialog(
-                requireContext(),
-                { _, selectedYear, selectedMonth, selectedDay ->
-                    calendar.set(selectedYear, selectedMonth, selectedDay)
+        // Đặt giờ mặc định là giờ hiện tại + 1
+        calendar.add(Calendar.HOUR_OF_DAY, 1)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
 
-                    val selectedDate =
-                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
-                    reservationData["start_date"] = selectedDate
-                    binding.tvSelectedDate.text = "Selected Date: $selectedDate"
-                },
-                year,
-                month,
-                day
-            )
+        val defaultTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(calendar.time)
+        reservationData["start_time"] = defaultTime
+//        binding.btnPickTime.text = "Reservation Time: $defaultTime"
+    }
+
+    private fun setupCalendarView() {
+        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            calendar.set(year, month, dayOfMonth)
+
+            val selectedDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(calendar.time)
+            reservationData["start_date"] = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time) // Lưu định dạng ISO
 
             // Chặn chọn ngày trong quá khứ
-            datePickerDialog.datePicker.minDate = System.currentTimeMillis()
-            datePickerDialog.show()
+            if (calendar.timeInMillis < System.currentTimeMillis()) {
+                showErrorDialog("Cannot select a date in the past.")
+//                binding.tvSelectedDate.text = "Selected Date: None"
+                reservationData.remove("start_date")
+            }
         }
     }
 
@@ -82,7 +100,6 @@ class ReservationDialog : DialogFragment() {
             val isToday = reservationData["start_date"] ==
                     SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(System.currentTimeMillis())
 
-            // Tính giờ mặc định (giờ hiện tại + 1, làm tròn lên giờ tiếp theo)
             val defaultHour = if (isToday) currentHour + 1 else 9 // Mặc định 9 giờ nếu không phải hôm nay
             val defaultMinute = 0 // Luôn làm tròn phút về 0
 
@@ -96,12 +113,11 @@ class ReservationDialog : DialogFragment() {
                         // Thiết lập giờ, phút, và giây
                         calendar.set(Calendar.HOUR_OF_DAY, selectedHour)
                         calendar.set(Calendar.MINUTE, selectedMinute)
-                        calendar.set(Calendar.SECOND, 0) // Đặt giây là 00
+                        calendar.set(Calendar.SECOND, 0)
 
-                        val formattedTime =
-                            SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(calendar.time)
+                        val formattedTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(calendar.time)
                         reservationData["start_time"] = formattedTime
-                        binding.tvSelectedTime.text = "Selected Time: $formattedTime"
+                        binding.btnPickTime.text = "Reservation Time: $formattedTime"
                     }
                 },
                 defaultHour,
@@ -112,11 +128,11 @@ class ReservationDialog : DialogFragment() {
         }
     }
 
-
-
     private fun setupSubmitButton() {
         binding.btnSubmit.setOnClickListener {
             val numPeopleText = binding.etNumPeople.text.toString()
+            val currentTime = System.currentTimeMillis()
+
 
             if (reservationData["start_date"].isNullOrEmpty() ||
                 reservationData["start_time"].isNullOrEmpty() ||
@@ -129,13 +145,15 @@ class ReservationDialog : DialogFragment() {
             val numPeople = numPeopleText.toIntOrNull()
             if (numPeople == null || numPeople <= 0) {
                 showErrorDialog("Please enter a valid number of people.")
+                Log.d("ReservationDialog", "Validation failed: Invalid number of people.")
                 return@setOnClickListener
             }
 
             val isoDateTime = "${reservationData["start_date"]}T${reservationData["start_time"]}Z"
+            Log.d("ReservationDialog", "ISO DateTime: $isoDateTime")
 
-            // Lấy giá trị của cartItems một lần
             val cartItems = foodViewModel.cartItems.value ?: emptyList()
+            Log.d("ReservationDialog", "Cart items: ${cartItems.size}")
 
             val foods = cartItems.map { food ->
                 FoodItem(
@@ -143,6 +161,7 @@ class ReservationDialog : DialogFragment() {
                     quantity = food.quantity
                 )
             }
+            Log.d("ReservationDialog", "Foods: $foods")
 
             val orderRequest = OrderRequest(
                 type = "reservation",
@@ -151,31 +170,80 @@ class ReservationDialog : DialogFragment() {
                 num_people = numPeople,
                 foods = foods
             )
+            Log.d("ReservationDialog", "OrderRequest: $orderRequest")
 
-            // Tạo đơn hàng qua ViewModel
+            // Kiểm tra nếu 60 giây chưa trôi qua
+            if (currentTime - preferenceManager.getLastSubmitTime() < 60000) {
+                showErrorDialog("Please wait before submitting again.")
+                Log.d("ReservationDialog", "Submit blocked: Please wait.")
+                return@setOnClickListener
+            }
+
+            preferenceManager.saveLastSubmitTime(currentTime)
+            Log.d("ReservationDialog", "Submit allowed: Proceeding with createOrder.")
+
             orderViewModel.createOrder(orderRequest)
+            disableButtonForOneMinute()
         }
     }
 
+//    private fun disableButtonForOneMinute() {
+//        binding.btnSubmit.isEnabled = false
+//
+//        // Sử dụng CountDownTimer để kích hoạt lại nút sau 60 giây
+//        object : CountDownTimer(60000, 1000) {
+//            override fun onTick(millisUntilFinished: Long) {
+//                binding.btnSubmit.text = "Wait: ${millisUntilFinished / 1000}s"
+//            }
+//
+//            override fun onFinish() {
+//                binding.btnSubmit.isEnabled = true
+//                binding.btnSubmit.text = "Submit Reservation"
+//            }
+//        }.start()
+//    }
+
+    private fun disableButtonForOneMinute() {
+        binding.btnSubmit.isEnabled = false
+
+        countDownTimer = object : CountDownTimer(60000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                binding?.let {
+                    it.btnSubmit.text = "Wait: ${millisUntilFinished / 1000}s"
+                }
+            }
+
+            override fun onFinish() {
+                binding?.let {
+                    it.btnSubmit.isEnabled = true
+                    it.btnSubmit.text = "Submit Reservation"
+                }
+            }
+        }
+        countDownTimer?.start()
+    }
 
     private fun observeOrderResult() {
         orderViewModel.orderResult.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { orderResponse ->
-                showSuccessDialog("Order created successfully with ID = ${orderResponse.id}")
-                resetDialogData()
-            }.onFailure { error ->
-                showErrorDialog("Failed to create order: ${error.message}")
+            result?.let {
+                it.onSuccess { orderResponse ->
+                    showSuccessDialog("Order created successfully with ID = ${orderResponse.id}")
+                    resetDialogData()
+                }.onFailure { error ->
+                    showErrorDialog("Failed to create order: ${error.message}")
+                }
+                // Đặt lại giá trị sau khi xử lý
+                orderViewModel.clearOrderResult()
             }
         }
     }
 
+
     private fun resetDialogData() {
         reservationData.clear()
-        binding.tvSelectedDate.text = "Selected Date: "
-        binding.tvSelectedTime.text = "Selected Time: "
+//        setupDefaultValues() // Reset lại giá trị mặc định
         binding.etNumPeople.text.clear()
 
-        // Reset số lượng món ăn trong giỏ về 0
         foodViewModel.resetCartQuantities()
     }
 
@@ -185,7 +253,7 @@ class ReservationDialog : DialogFragment() {
             .setMessage(message)
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
-                dismiss() // Close the dialog on success
+                dismiss()
             }
             .show()
     }
@@ -202,6 +270,7 @@ class ReservationDialog : DialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        countDownTimer?.cancel() // Hủy CountDownTimer nếu Dialog bị đóng
         _binding = null
     }
 
@@ -212,4 +281,5 @@ class ReservationDialog : DialogFragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
+
 }

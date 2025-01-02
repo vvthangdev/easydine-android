@@ -10,15 +10,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.easydine.R
 import com.example.easydine.databinding.ActivityHomeBinding
 import com.example.easydine.ui.adapter.FoodAdapter
 import com.example.easydine.ui.adapter.ImageBannerAdapter
 import com.example.easydine.ui.cart.CartActivity
 import com.example.easydine.ui.login.LoginActivity
 import com.example.easydine.ui.reservation.ReservationDialog
+import com.example.easydine.ui.user.UserFragment
 import com.example.easydine.ui.viewmodel.FoodViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -68,7 +71,7 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.btnReservation.setOnClickListener {
+        binding.btnAddReservation.setOnClickListener {
             lifecycleScope.launch {
                 val cartItems = homeViewModel.getCartItemsSync()
                 if (cartItems.isNotEmpty()) {
@@ -82,8 +85,60 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        binding.btnHome.setOnClickListener {
 
-//        binding.btnReservation.setOnClickListener{showReservationFragment()}
+            supportFragmentManager.popBackStack(
+                null,
+                androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+            if (currentFragment != null) {
+                supportFragmentManager.beginTransaction()
+                    .remove(currentFragment)
+                    .commit()
+            }
+        }
+
+        binding.btnProfile.setOnClickListener {
+            switchToUserFragment()
+        }
+
+        binding.btnBack.setOnClickListener {
+            showExitConfirmationDialog()
+        }
+
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            showExitConfirmationDialog()
+        }
+    }
+
+    private fun showExitConfirmationDialog() {
+        if (!isFinishing) {
+            AlertDialog.Builder(this)
+                .setTitle("Exit Application")
+                .setMessage("Are you sure you want to exit?")
+                .setPositiveButton("Yes") { _, _ ->
+                    finish()
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
+        }
+    }
+
+    private fun switchToUserFragment() {
+        val userFragment = UserFragment()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, userFragment) // Replace the fragment
+            .addToBackStack(null) // Optional: Add this transaction to the back stack
+            .commit()
     }
 
     private fun showReservationDialog() {
@@ -91,14 +146,6 @@ class HomeActivity : AppCompatActivity() {
         reservationDialog.show(supportFragmentManager, "ReservationDialog")
     }
 
-    override fun onBackPressed() {
-        // Handle back navigation
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            supportFragmentManager.popBackStack()
-        } else {
-            super.onBackPressed()
-        }
-    }
 
     /*
     Banner

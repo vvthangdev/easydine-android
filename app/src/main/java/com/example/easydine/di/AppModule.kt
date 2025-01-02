@@ -1,6 +1,8 @@
 package com.example.easydine.di
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.easydine.data.local.dao.FoodDao
 import com.example.easydine.data.local.dao.ImageBannerDao
@@ -12,7 +14,7 @@ import com.example.easydine.data.network.service.OrderApiService
 import com.example.easydine.data.network.service.UserApiService
 import com.example.easydine.data.repositories.FoodRepository
 import com.example.easydine.data.repositories.UserRepository
-import com.example.easydine.utils.Constants
+import com.example.easydine.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -124,10 +126,29 @@ object AppModule {
         return retrofit.create(OrderApiService::class.java)
     }
 
-    // --- Repositories ---
+    // Cung cấp Context
     @Provides
-    fun provideUserRepository(apiService: UserApiService): UserRepository {
-        return UserRepository(apiService)
+    @Singleton
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
+    }
+
+    // Cung cấp SharedPreferences mà không cần sử dụng Context trong các constructor khác
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+    }
+
+    // --- Repositories ---
+    // Cung cấp UserRepository
+    @Provides
+    @Singleton
+    fun provideUserRepository(
+        sharedPreferences: SharedPreferences,
+        apiService: UserApiService
+    ): UserRepository {
+        return UserRepository(sharedPreferences, apiService)
     }
 
     @Provides

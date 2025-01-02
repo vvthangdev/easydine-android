@@ -16,14 +16,19 @@ class OrderViewModel @Inject constructor(
     private val orderRepository: OrderRepository
 ) : ViewModel() {
 
-    private val _orderResult = MutableLiveData<Result<OrderResponse>>()
-    val orderResult: LiveData<Result<OrderResponse>> get() = _orderResult
+    private val _orderResult = MutableLiveData<Result<OrderResponse>?>()
+    val orderResult: LiveData<Result<OrderResponse>?> get() = _orderResult
+//    var lastSubmitTime: Long = 0
 
     fun createOrder(orderRequest: OrderRequest) {
         viewModelScope.launch {
             val result = orderRepository.createOrder(orderRequest)
             _orderResult.postValue(result)
         }
+    }
+
+    fun clearOrderResult() {
+        _orderResult.value = null
     }
 
 }

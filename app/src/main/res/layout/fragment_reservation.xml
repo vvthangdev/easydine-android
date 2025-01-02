@@ -6,43 +6,76 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tvSelectedDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Selected Date: None" />
 
-    <Button
-        android:id="@+id/btnPickDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pick Date" />
+    <!--    <TextView-->
+    <!--        android:id="@+id/tvSelectedDate"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Selected Date: None" />-->
 
     <TextView
-        android:id="@+id/tvSelectedTime"
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Selected Time: None" />
-
-    <Button
-        android:id="@+id/btnPickTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Giờ đến" />
-
+        android:layout_marginTop="20dp"
+        android:text="Number People"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/etNumPeople"
         android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/edt_login_bg"
+        android:hint="Enter number"
+        android:inputType="number"
+        android:paddingStart="20dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Number of People"
-        android:inputType="number" />
+        android:layout_marginTop="5dp"
+        android:text="Reservation Date"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" />
+
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/tvSelectedTime"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:padding="8dp"-->
+    <!--            android:text="Reservation Time"-->
+    <!--            android:textColor="@color/black"-->
+    <!--            android:textSize="20sp"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnPickTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pick Time"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Submit Reservation" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/btn_login_bg"
+        android:text="Submit Reservation"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
 </LinearLayout>
