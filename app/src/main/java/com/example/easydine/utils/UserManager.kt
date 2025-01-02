@@ -14,6 +14,7 @@ object UserManager {
         val message = sharedPreferences.getString("message", null)
         val address = sharedPreferences.getString("address", null)
         val avatar = sharedPreferences.getString("avatar", null)
+        val bio = sharedPreferences.getString("bio", null)
         val email = sharedPreferences.getString("email", null)
         val phone = sharedPreferences.getString("phone", null)
         val username = sharedPreferences.getString("username", null)
@@ -29,6 +30,7 @@ object UserManager {
                 message = message,
                 address = address,
                 avatar = avatar,
+                bio = bio,
                 email = email,
                 phone = phone,
                 username = username,
@@ -48,6 +50,7 @@ object UserManager {
         editor.putString("message", user.message)
         editor.putString("address", user.address)
         editor.putString("avatar", user.avatar)
+        editor.putString("bio", user.bio)
         editor.putString("email", user.email)
         editor.putString("phone", user.phone)
         editor.putString("username", user.username)
@@ -65,6 +68,7 @@ object UserManager {
         editor.remove("message")
         editor.remove("address")
         editor.remove("avatar")
+        editor.remove("bio")
         editor.remove("email")
         editor.remove("phone")
         editor.remove("username")

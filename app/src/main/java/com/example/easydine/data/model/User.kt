@@ -8,6 +8,7 @@ data class User(
     var message: String?,
     var address: String?,
     var avatar: String?,
+    var bio: String?,
     var email: String?,
     var phone: String?,
     var username: String?,

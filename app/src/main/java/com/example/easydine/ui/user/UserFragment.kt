@@ -25,7 +25,7 @@ class UserFragment : Fragment() {
     // Các view bạn cần tham chiếu tới
     private lateinit var ivUserAvatar: ImageView
     private lateinit var tvUserName: TextView
-    private lateinit var tvUserTagline: TextView
+    private lateinit var tvUserBio: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,13 +36,29 @@ class UserFragment : Fragment() {
 
         ivUserAvatar = binding.ivUserAvatar
         tvUserName = binding.tvUserName
-        tvUserTagline = binding.tvUserTagline
+        tvUserBio = binding.tvUserBio
         binding.itemProfile.layoutLogOutRow.setOnClickListener {
             showLogOutDialog()
         }
 
+        binding.itemProfile.layoutPersonalInfoRow.setOnClickListener {
+            onPersionalInfoClicked()
+        }
+
         return binding.root
     }
+
+    private fun onPersionalInfoClicked() {
+        // Làm mới dữ liệu người dùng từ ViewModel
+        userViewModel.getUserData()
+
+        // Tạo instance của UserInfoDialogFragment
+        val userInfoDialogFragment = UserInfoDialogFragment()
+
+        // Mở fragment mà không cần truyền dữ liệu qua Bundle
+        userInfoDialogFragment.show(childFragmentManager, "UserInfoDialogFragment")
+    }
+
 
     // Hàm hiển thị AlertDialog khi người dùng chọn đăng xuất
     private fun showLogOutDialog() {
@@ -71,12 +87,15 @@ class UserFragment : Fragment() {
         // Khởi tạo ViewModel
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
+//        userViewModel.refreshUserData()
+        userViewModel.getUserData()
+
         // Quan sát dữ liệu người dùng
         userViewModel.userData.observe(viewLifecycleOwner, Observer { user ->
             // Cập nhật UI với thông tin người dùng
             user?.let {
-                tvUserName.text = it.username
-                tvUserTagline.text = "it.tagline" // Nếu có tagline, nếu không có thì có thể để trống
+                tvUserName.text = it.name
+                tvUserBio.text = it.bio // Nếu có tagline, nếu không có thì có thể để trống
 
                 // Sử dụng Glide hoặc thư viện tương tự để tải ảnh avatar
                 Glide.with(requireContext())
@@ -84,8 +103,5 @@ class UserFragment : Fragment() {
                     .into(ivUserAvatar)
             }
         })
-
-        // Lấy dữ liệu người dùng
-        userViewModel.getUserData()
     }
 }

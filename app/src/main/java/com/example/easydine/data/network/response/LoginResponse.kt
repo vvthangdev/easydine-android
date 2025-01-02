@@ -10,6 +10,7 @@ data class LoginResponse(
     @Json(name = "role") val role: String? = "Guest",
     @Json(name = "address") val address: String? = "No address provided",
     @Json(name = "avatar") val avatar: String? = "default-avatar.png",
+    @Json(name = "bio") val bio: String? = "Hello",
     @Json(name = "email") val email: String? = "noemail@example.com",
     @Json(name = "username") val username: String? = "Unknown Username",
     @Json(name = "phone") val phone: String? = "No phone",

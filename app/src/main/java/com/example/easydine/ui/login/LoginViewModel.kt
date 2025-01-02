@@ -49,6 +49,7 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
                             editor.putString("role", it.role)
                             editor.putString("address", it.address)
                             editor.putString("avatar", it.avatar)
+                            editor.putString("bio", it.bio)
                             editor.putString("email", it.email)
                             editor.putString("phone", it.phone)
                             editor.putString("username", it.username)

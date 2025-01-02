@@ -84,7 +84,7 @@
             android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="15dp"
             android:text="Aris"
             android:textColor="#32343E"
             android:textSize="20sp"
@@ -94,7 +94,7 @@
 
         <!-- User Tagline -->
         <TextView
-            android:id="@+id/tv_user_tagline"
+            android:id="@+id/tv_user_bio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="I love easy dine"

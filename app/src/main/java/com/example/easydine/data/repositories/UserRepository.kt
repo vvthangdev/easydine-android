@@ -3,9 +3,11 @@ package com.example.easydine.data.repositories
 import android.content.SharedPreferences
 import android.util.Log
 import com.example.easydine.data.model.User
+import com.example.easydine.data.model.UserUpdateRequest
 import com.example.easydine.data.network.response.LoginResponse
 import com.example.easydine.data.network.response.RefreshTokenResponse
 import com.example.easydine.data.network.response.SignUpResponse
+import com.example.easydine.data.network.response.UserUpdateResponse
 import com.example.easydine.data.network.service.UserApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -20,20 +22,25 @@ class UserRepository @Inject constructor(
     // Lưu thông tin người dùng vào SharedPreferences
     private fun saveUserData(user: User) {
         val editor = sharedPreferences.edit()
-        editor.putInt("id", user.id!!)
+
+        // Chỉ lưu các giá trị nếu có thay đổi, không cần lưu lại những trường null
+        editor.putInt("id", user.id ?: -1)
         editor.putString("role", user.role)
         editor.putString("name", user.name)
         editor.putString("status", user.status)
         editor.putString("message", user.message)
         editor.putString("address", user.address)
         editor.putString("avatar", user.avatar)
+        editor.putString("bio", user.bio)
         editor.putString("email", user.email)
         editor.putString("phone", user.phone)
         editor.putString("username", user.username)
         editor.putString("accessToken", user.accessToken)
-//        editor.putString("refreshToken", user.refreshToken)
-        editor.apply()
+        editor.putString("refreshToken", user.refreshToken)
+
+        editor.apply()  // Lưu thay đổi
     }
+
 
     // Lấy dữ liệu người dùng từ SharedPreferences
     fun getUserData(): User? {
@@ -44,6 +51,7 @@ class UserRepository @Inject constructor(
         val message = sharedPreferences.getString("message", null)
         val address = sharedPreferences.getString("address", null)
         val avatar = sharedPreferences.getString("avatar", null)
+        val bio = sharedPreferences.getString("bio", null)
         val email = sharedPreferences.getString("email", null)
         val phone = sharedPreferences.getString("phone", null)
         val username = sharedPreferences.getString("username", null)
@@ -51,7 +59,7 @@ class UserRepository @Inject constructor(
         val refreshToken = sharedPreferences.getString("refreshToken", null)
 
         // Nếu tất cả thông tin người dùng hợp lệ, trả về User, nếu không trả về null
-        return if (id != -1 && role != null && name != null && email != null && accessToken != null) {
+        return if (role != null && name != null && email != null && accessToken != null) {
             User(
                 id = id,
                 role = role,
@@ -60,6 +68,7 @@ class UserRepository @Inject constructor(
                 message = message,
                 address = address,
                 avatar = avatar,
+                bio = bio,
                 email = email,
                 phone = phone,
                 username = username,
@@ -70,6 +79,31 @@ class UserRepository @Inject constructor(
             null
         }
     }
+
+    // Hàm này sẽ được gọi khi dữ liệu người dùng được tải từ API
+    private fun updateUserIfNeeded(user: User) {
+        val currentUser = getUserData()  // Lấy dữ liệu người dùng hiện tại từ SharedPreferences
+
+        val updatedUser = currentUser?.copy(
+            // Chỉ cập nhật nếu có dữ liệu trả về
+            role = user.role ?: currentUser.role,
+            name = user.name ?: currentUser.name,
+            status = user.status ?: currentUser.status,
+            message = user.message ?: currentUser.message,
+            address = user.address ?: currentUser.address,
+            avatar = user.avatar ?: currentUser.avatar,
+            bio = user.bio ?: currentUser.bio,
+            email = user.email ?: currentUser.email,
+            phone = user.phone ?: currentUser.phone,
+            username = user.username ?: currentUser.username,
+            accessToken = user.accessToken ?: currentUser.accessToken,
+            refreshToken = user.refreshToken ?: currentUser.refreshToken
+        )
+
+        // Sau khi cập nhật các trường hợp có dữ liệu, lưu lại vào SharedPreferences
+        updatedUser?.let { saveUserData(it) }
+    }
+
 
     // Xóa dữ liệu người dùng khỏi SharedPreferences
     fun clearUserData() {
@@ -82,14 +116,13 @@ class UserRepository @Inject constructor(
     suspend fun refreshUserData(): User? {
         return withContext(Dispatchers.IO) {
             try {
-                // Gọi API để lấy lại thông tin người dùng
                 val response = apiService.getUserDataApi()
 
                 if (response.isSuccessful) {
                     val user = response.body()
-                    // Nếu có dữ liệu người dùng, lưu vào SharedPreferences
                     if (user != null) {
-                        saveUserData(user)
+                        // Cập nhật người dùng chỉ với các trường có dữ liệu trả về
+                        updateUserIfNeeded(user)
                         return@withContext user
                     }
                 }
@@ -100,6 +133,28 @@ class UserRepository @Inject constructor(
             }
         }
     }
+
+
+    // Cập nhật thông tin người dùng
+    suspend fun updateUserData(userUpdateRequest: UserUpdateRequest): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.updateUserDataApi(userUpdateRequest)
+
+                if (response.isSuccessful) {
+                    // Nếu cập nhật thành công, trả về true
+                    return@withContext true
+                } else {
+                    // Nếu có lỗi, trả về false
+                    return@withContext false
+                }
+            } catch (e: Exception) {
+                Log.e("UserRepository", "Error updating user data: ${e.message}", e)
+                return@withContext false
+            }
+        }
+    }
+
 
     // Đăng nhập người dùng
     suspend fun loginUser(email: String, password: String): LoginResponse? {

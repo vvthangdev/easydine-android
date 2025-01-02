@@ -1,6 +1,4 @@
 package com.example.easydine.data.network.response
-
-import com.example.easydine.data.model.Food
 import com.squareup.moshi.Json
 
 data class FoodResponse(

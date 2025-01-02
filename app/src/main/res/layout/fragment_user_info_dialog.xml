@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/login_color_bg"
+    tools:context=".ui.user.UserInfoDialogFragment">
+
+    <!-- Logo hoặc hình ảnh nền -->
+    <ImageView
+        android:id="@+id/ivBackgroundImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bg_asset" />
+
+    <!-- Tiêu đề chính -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="User Info"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Mô tả phụ -->
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:text="Name"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <!-- Hình ảnh nền chính -->
+    <ImageView
+        android:id="@+id/ivWhiteBackground"
+        android:layout_width="match_parent"
+        android:layout_height="800dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubtitle"
+        app:srcCompat="@drawable/white_bg" />
+
+    <!-- Container cho các trường nhập liệu -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="800dp"
+        android:orientation="vertical"
+        android:padding="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ivWhiteBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- Full Name -->
+            <TextView
+                android:id="@+id/tvFullNameLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Full Name"
+                android:textColor="@color/txt_login_color"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/edtFullName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/edt_login_bg"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="Nguyen Van A"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:textColorHint="#A0A5BA"
+                android:textSize="16sp" />
+
+            <!-- User Name -->
+            <TextView
+                android:id="@+id/tvUserNameLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="User Name"
+                android:textColor="@color/txt_login_color"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/edtUserName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/edt_login_bg"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="Aris"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:textColorHint="#A0A5BA"
+                android:textSize="16sp" />
+
+            <!-- Address -->
+            <TextView
+                android:id="@+id/tvAddressLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Address"
+                android:textColor="@color/txt_login_color"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/edtAddress"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/edt_login_bg"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="Viet Nam"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:textColorHint="#A0A5BA"
+                android:textSize="16sp" />
+
+            <!-- Address -->
+            <TextView
+                android:id="@+id/tvBioLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Bio"
+                android:textColor="@color/txt_login_color"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/edtBio"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/edt_login_bg"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="Hello world"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:textColorHint="#A0A5BA"
+                android:textSize="16sp" />
+
+            <!-- Email -->
+            <TextView
+                android:id="@+id/tvEmailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/txt_login_color"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/edtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/edt_login_bg"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="example@gmail.com"
+                android:inputType="textEmailAddress"
+                android:paddingStart="16dp"
+                android:textColorHint="#A0A5BA"
+                android:textSize="16sp" />
+
+            <!-- Phone -->
+            <TextView
+                android:id="@+id/tvPhoneLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Phone"
+                android:textColor="@color/txt_login_color"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/edtPhone"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/edt_login_bg"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="+84 0123456789"
+                android:inputType="phone"
+                android:paddingStart="16dp"
+                android:textColorHint="#A0A5BA"
+                android:textSize="16sp" />
+
+            <!-- Button Update -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/btn_login_bg"
+                android:gravity="center"
+                android:text="UPDATE"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
