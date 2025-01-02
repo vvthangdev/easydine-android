@@ -1,12 +1,14 @@
 package com.example.easydine.ui.cart
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.easydine.databinding.ActivityCartBinding
 import com.example.easydine.ui.adapter.CartAdapter
+import com.example.easydine.ui.reservation.ReservationDialog
 import com.example.easydine.ui.viewmodel.FoodViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,6 +38,7 @@ class CartActivity : AppCompatActivity() {
         )
         binding.rvCartItems.layoutManager = LinearLayoutManager(this)
         binding.rvCartItems.adapter = cartAdapter
+        binding.btnBack.setOnClickListener { finish() }
 
         // Observe cart items and update the adapter
         foodViewModel.cartItems.observe(this, Observer { cartFoods ->
@@ -43,6 +46,7 @@ class CartActivity : AppCompatActivity() {
                 cartAdapter.setData(cartFoods) // Cập nhật dữ liệu giỏ hàng
                 foodViewModel.calculateTotalPrice(cartFoods)
             } else {
+                cartAdapter.setData(cartFoods)
                 // Hiển thị thông báo nếu giỏ hàng trống
 //                binding.tvEmptyCartMessage.visibility = View.VISIBLE
             }
@@ -52,6 +56,15 @@ class CartActivity : AppCompatActivity() {
         foodViewModel.totalPrice.observe(this, Observer { total ->
             binding.tvTotalPrice.text = "Total: ${String.format("%.0f", total)} VND"
         })
+
+        binding.btnPlaceOrder.setOnClickListener {
+            showReservationDialog()
+        }
+    }
+
+    private fun showReservationDialog() {
+        val reservationDialog = ReservationDialog()
+        reservationDialog.show(supportFragmentManager, "ReservationDialog")
     }
 }
 

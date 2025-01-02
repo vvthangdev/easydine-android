@@ -1,5 +1,6 @@
 package com.example.easydine.ui.adapter
 
+import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -31,6 +32,7 @@ class CartAdapter(
     override fun getItemCount(): Int = foods.size
 
     // Cập nhật dữ liệu mới
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(newFoods: List<Food>) {
         foods = newFoods
         notifyDataSetChanged()

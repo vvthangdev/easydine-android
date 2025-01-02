@@ -21,6 +21,11 @@ class FoodRepository @Inject constructor(
     fun getCartItems(): LiveData<List<Food>> {
         return foodDao.getCartItems()
     }
+
+    suspend fun getCartItemsSync(): List<Food> {
+        return foodDao.getCartItemsSync() // Hàm này cần thêm trong DAO
+    }
+
     /**
      * Add item to cart.
      */

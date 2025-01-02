@@ -18,6 +18,9 @@ interface FoodDao {
     @Query("SELECT COUNT(*) FROM foods WHERE quantity > 0")
     fun getCartItemCount(): LiveData<Int>
 
+    @Query("SELECT * FROM foods WHERE quantity > 0")
+    suspend fun getCartItemsSync(): List<Food>
+
     @Query("SELECT * FROM foods WHERE quantity >= 1")
     fun getCartItems(): LiveData<List<Food>>
 

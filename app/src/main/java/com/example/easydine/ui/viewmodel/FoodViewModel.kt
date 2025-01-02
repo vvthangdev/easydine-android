@@ -32,6 +32,15 @@ class FoodViewModel @Inject constructor(private val repository: FoodRepository) 
         _totalPrice.postValue(total)
     }
 
+    fun resetCartQuantities() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val cartItems = repository.getCartItemsSync()
+            cartItems.forEach { food ->
+                repository.updateQuantity(food.id, 0)  // Cập nhật số lượng món ăn về 0
+            }
+        }
+    }
+
     /**
      * Gọi API để lấy danh sách món ăn và lưu vào Room database.
      */
@@ -40,24 +49,6 @@ class FoodViewModel @Inject constructor(private val repository: FoodRepository) 
             repository.fetchAndSaveFoods()
         }
     }
-
-    /**
-     * Thêm món ăn vào giỏ hàng.
-     */
-//    fun addToCart(foodId: Int, quantity: Int) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            repository.addToCart(foodId, quantity)
-//        }
-//    }
-
-    /**
-     * Xóa món ăn khỏi giỏ hàng.
-     */
-//    fun removeFromCart(foodId: Int) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            repository.removeFromCart(foodId)
-//        }
-//    }
 
     fun increaseQuantity(foodId: Int) {
         viewModelScope.launch(Dispatchers.IO) {

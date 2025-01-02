@@ -72,14 +72,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation ("com.google.android.material:material:1.9.0")
+
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt ("com.github.bumptech.glide:compiler:4.15.1")
 
-    // Testing Libraries
-//    testImplementation ("junit:junit:4.13.2")
-//    testImplementation ("org.mockito:mockito-core:4.11.0")
-//    testImplementation ("org.mockito.kotlin:mockito-kotlin:4.1.0")
-//    testImplementation ("androidx.arch.core:core-testing:2.1.0")
-//    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    implementation ("androidx.fragment:fragment-ktx:1.6.0") // Hoặc phiên bản mới nhất
 }

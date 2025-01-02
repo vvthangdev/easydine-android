@@ -4,24 +4,28 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.easydine.databinding.ActivityHomeBinding
 import com.example.easydine.ui.adapter.FoodAdapter
 import com.example.easydine.ui.adapter.ImageBannerAdapter
 import com.example.easydine.ui.cart.CartActivity
+import com.example.easydine.ui.login.LoginActivity
+import com.example.easydine.ui.reservation.ReservationDialog
 import com.example.easydine.ui.viewmodel.FoodViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private val imageBannerViewModel: ImageBannerViewModel by viewModels()
     private val foodViewModel: FoodViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     private lateinit var imageBannerAdapter: ImageBannerAdapter
     private lateinit var foodAdapter: FoodAdapter
@@ -46,17 +50,53 @@ class HomeActivity : AppCompatActivity() {
             imageBannerViewModel.refreshBanners(accessToken)
             foodViewModel.fetchAndSaveFoods()
         } else {
-            Log.e("HomeActivity", "Access token is null. Please login.")
-            // Gợi ý: Thông báo cho người dùng hoặc chuyển đến màn hình đăng nhập
+            AlertDialog.Builder(this)
+                .setTitle("Authentication required")
+                .setMessage("Access token is null. Please login to continue.")
+                .setPositiveButton("Login") { _, _ ->
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
         }
 
         observeViewModel()
-
 
         binding.ivCartIcon.setOnClickListener {
             // Mở CartActivity
             val intent = Intent(this, CartActivity::class.java)
             startActivity(intent)
+        }
+
+        binding.btnReservation.setOnClickListener {
+            lifecycleScope.launch {
+                val cartItems = homeViewModel.getCartItemsSync()
+                if (cartItems.isNotEmpty()) {
+                    // Có món trong giỏ hàng -> Mở CartActivity
+                    val intent = Intent(this@HomeActivity, CartActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    // Không có món trong giỏ hàng -> Hiển thị ReservationFragment
+                    showReservationDialog()
+                }
+            }
+        }
+
+
+//        binding.btnReservation.setOnClickListener{showReservationFragment()}
+    }
+
+    private fun showReservationDialog() {
+        val reservationDialog = ReservationDialog()
+        reservationDialog.show(supportFragmentManager, "ReservationDialog")
+    }
+
+    override fun onBackPressed() {
+        // Handle back navigation
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
         }
     }
 
@@ -75,7 +115,7 @@ class HomeActivity : AppCompatActivity() {
 //        }
 
         foodAdapter = FoodAdapter(
-            onAddToCartClick = {foodId ->
+            onAddToCartClick = { foodId ->
                 foodViewModel.increaseQuantity(foodId)
             }
         )
@@ -111,7 +151,8 @@ class HomeActivity : AppCompatActivity() {
     private fun initializeAutoScrollRunnable() {
         autoScrollRunnable = Runnable {
             if (::imageBannerAdapter.isInitialized && imageBannerAdapter.itemCount > 0) {
-                currentPage = if (currentPage == imageBannerAdapter.itemCount - 1) 0 else currentPage + 1
+                currentPage =
+                    if (currentPage == imageBannerAdapter.itemCount - 1) 0 else currentPage + 1
                 binding.vpImageBanner.setCurrentItem(currentPage, true)
                 handler.postDelayed(autoScrollRunnable, 3000)
             }

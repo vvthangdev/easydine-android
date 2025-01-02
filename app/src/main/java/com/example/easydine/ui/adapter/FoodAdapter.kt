@@ -1,5 +1,6 @@
 package com.example.easydine.ui.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -54,6 +55,7 @@ class FoodAdapter(
         return foods.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(newFoods: List<Food>) {
         this.foods = newFoods
         notifyDataSetChanged()
