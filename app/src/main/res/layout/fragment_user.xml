@@ -66,7 +66,7 @@
         app:layout_constraintTop_toBottomOf="@+id/layout_header">
 
         <!-- User Avatar -->
-        <ImageView
+        <ImageButton
             android:id="@+id/iv_user_avatar"
             android:layout_width="150dp"
             android:layout_height="150dp"

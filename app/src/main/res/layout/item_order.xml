@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#F0F5FA"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonOrderNumber"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/order_circle_num"
+        android:text="1"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewOrderId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:text="Order ID"
+        android:textColor="#32343E"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/buttonOrderNumber"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewOrderTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Order time"
+        android:textColor="#6B6E82"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/textViewOrderId"
+        app:layout_constraintTop_toBottomOf="@+id/textViewOrderId" />
+
+    <TextView
+        android:id="@+id/textViewOrderStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textColor="#6B6E82"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/textViewOrderTime"
+        app:layout_constraintTop_toBottomOf="@+id/textViewOrderTime" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

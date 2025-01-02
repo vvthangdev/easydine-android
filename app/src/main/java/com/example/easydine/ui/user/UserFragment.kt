@@ -9,18 +9,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.easydine.R
 import com.example.easydine.databinding.FragmentUserBinding
 import com.example.easydine.ui.login.LoginActivity
+import com.example.easydine.ui.order.OrderFragment
+import com.example.easydine.ui.order.OrderViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class UserFragment : Fragment() {
 
     private lateinit var userViewModel: UserViewModel
+//    private lateinit var orderViewModel: OrderViewModel
+    private val orderViewModel: OrderViewModel by viewModels()
 
     // Các view bạn cần tham chiếu tới
     private lateinit var ivUserAvatar: ImageView
@@ -45,7 +50,22 @@ class UserFragment : Fragment() {
             onPersionalInfoClicked()
         }
 
+        binding.itemProfile.layoutCartRow.setOnClickListener {
+            onCartInfoClicked()
+        }
+
         return binding.root
+    }
+
+    private fun onCartInfoClicked() {
+        orderViewModel.fetchAndSaveOrders()
+        val orderFragment = OrderFragment()
+
+        // Thay thế Fragment hiện tại bằng OrderFragment
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, orderFragment) // ID của container trong layout chính
+            .addToBackStack(null) // Thêm vào back stack để người dùng có thể quay lại
+            .commit()
     }
 
     private fun onPersionalInfoClicked() {

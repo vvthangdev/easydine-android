@@ -1,4 +1,4 @@
-package com.example.easydine.di
+package com.example.easydine
 
 import android.app.Application
 import android.content.Context
@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.easydine.data.local.dao.FoodDao
 import com.example.easydine.data.local.dao.ImageBannerDao
+import com.example.easydine.data.local.dao.OrderDao
 import com.example.easydine.data.local.database.AppDatabase
 import com.example.easydine.data.network.AuthInterceptor
 import com.example.easydine.data.network.service.FoodApiService
@@ -13,8 +14,8 @@ import com.example.easydine.data.network.service.ImageBannerService
 import com.example.easydine.data.network.service.OrderApiService
 import com.example.easydine.data.network.service.UserApiService
 import com.example.easydine.data.repositories.FoodRepository
+import com.example.easydine.data.repositories.OrderRepository
 import com.example.easydine.data.repositories.UserRepository
-import com.example.easydine.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -37,6 +38,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDatabase(app: Application): AppDatabase {
+//        app.deleteDatabase("food_database")
         return Room.databaseBuilder(
             app,
             AppDatabase::class.java,
@@ -50,7 +52,12 @@ object AppModule {
     fun provideFoodDao(database: AppDatabase): FoodDao = database.foodDao()
 
     @Provides
+    fun provideOrderDao(database: AppDatabase): OrderDao = database.orderDao()
+
+    @Provides
     fun provideImageBannerDao(database: AppDatabase): ImageBannerDao = database.imageBannerDao()
+
+
 
     // --- Moshi ---
     @Provides
@@ -114,6 +121,12 @@ object AppModule {
         return retrofit.create(FoodApiService::class.java)
     }
 
+//    @Provides
+//    @Singleton
+//    fun provideOrderApiService(retrofit: Retrofit): OrderApiService {
+//        return retrofit.create(OrderApiService::class.java)
+//    }
+
     @Provides
     @Singleton
     fun provideImageBannerService(retrofit: Retrofit): ImageBannerService {
@@ -159,4 +172,14 @@ object AppModule {
     ): FoodRepository {
         return FoodRepository(foodDao, foodApiService)
     }
+
+    @Provides
+    @Singleton
+    fun provideOrderRepository(
+        orderDao: OrderDao,
+        orderApiService: OrderApiService
+    ): OrderRepository {
+        return OrderRepository(orderDao, orderApiService)
+    }
+
 }

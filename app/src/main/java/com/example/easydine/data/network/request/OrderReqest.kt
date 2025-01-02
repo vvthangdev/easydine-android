@@ -5,7 +5,7 @@ data class OrderRequest(
     val status: String,
     val start_time: String,
     val num_people: Int,
-    val foods: List<FoodItem>? = null
+    val items: List<FoodItem>? = null
 )
 
 data class FoodItem(

@@ -168,12 +168,12 @@ class ReservationDialog : DialogFragment() {
                 status = "pending",
                 start_time = isoDateTime,
                 num_people = numPeople,
-                foods = foods
+                items = foods
             )
             Log.d("ReservationDialog", "OrderRequest: $orderRequest")
 
             // Kiểm tra nếu 60 giây chưa trôi qua
-            if (currentTime - preferenceManager.getLastSubmitTime() < 60000) {
+            if (currentTime - preferenceManager.getLastSubmitTime() < 10000) {
                 showErrorDialog("Please wait before submitting again.")
                 Log.d("ReservationDialog", "Submit blocked: Please wait.")
                 return@setOnClickListener
@@ -184,6 +184,7 @@ class ReservationDialog : DialogFragment() {
 
             orderViewModel.createOrder(orderRequest)
             disableButtonForOneMinute()
+
         }
     }
 
@@ -206,7 +207,7 @@ class ReservationDialog : DialogFragment() {
     private fun disableButtonForOneMinute() {
         binding.btnSubmit.isEnabled = false
 
-        countDownTimer = object : CountDownTimer(60000, 1000) {
+        countDownTimer = object : CountDownTimer(10000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 binding?.let {
                     it.btnSubmit.text = "Wait: ${millisUntilFinished / 1000}s"
@@ -236,6 +237,7 @@ class ReservationDialog : DialogFragment() {
                 orderViewModel.clearOrderResult()
             }
         }
+
     }
 
 
